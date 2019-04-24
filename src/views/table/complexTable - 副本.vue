@@ -1,22 +1,30 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input placeholder="输入员工姓名搜索" v-model="listQuery.stuffname" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <!-- <el-select v-model="listQuery.importance" :placeholder="$t('table.importance')" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-      </el-select> -->
-      <!-- <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-      </el-select> -->
-      <!-- <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
-      </el-select> -->
+      <el-input :placeholder="$t('table.title')" v-model="listQuery.title" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-select v-model="listQuery.importance" :placeholder="$t('table.importance')" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item"/>
+      </el-select>
+      <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item" style="width: 130px">
+        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key"/>
+      </el-select>
+      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key"/>
+      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleStuffCreate">{{ $t('table.add') }}</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">{{ $t('table.export') }}</el-button>
-      <!-- <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">{{ $t('table.reviewer') }}</el-checkbox> -->
+      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">{{ $t('table.reviewer') }}</el-checkbox>
     </div>
-    <el-table v-loading="listLoading" :key="tableKey" :data="list" border fit highlight-current-row style="width: 100%;">
+
+    <el-table
+      v-loading="listLoading"
+      :key="tableKey"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%;">
       <el-table-column :label="$t('table.id')" align="center" width="65">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
@@ -40,23 +48,25 @@
       <el-table-column :label="$t('table.actions')" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="danger" size="mini" @click="handleCreate(scope.row)">{{ $t('table.borrow') }}</el-button>
-          <el-button type="success" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.back') }}</el-button>
+          <el-button type="success"  size="mini" @click="handleUpdate(scope.row)">{{ $t('table.back') }}</el-button>
           <el-button type="primary" size="mini" @click="handleDetail(scope.row)">{{ $t('table.detail') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
+
     <!-- <div class="pagination-container">
       <el-pagination v-show="total>0" :current-page="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" :total="total" background layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"/>
     </div> -->
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" class="create">
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <!-- <el-form-item :label="$t('table.type')" prop="type">
           <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
             <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
         </el-form-item> -->
-        <el-form-item label="金额" prop="money">
-          <el-input type="number" v-model="temp.money" />
+        <el-form-item :label="$t('table.borrow')" prop="money">
+          <el-input type="number" v-model="temp.money"/>
         </el-form-item>
         <!-- <el-form-item :label="$t('table.date')" prop="timestamp">
           <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date"/>
@@ -66,11 +76,11 @@
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item"/>
           </el-select>
         </el-form-item> -->
-        <!--  <el-form-item :label="$t('table.importance')">
+       <!--  <el-form-item :label="$t('table.importance')">
           <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;"/>
         </el-form-item> -->
         <el-form-item :label="$t('table.remark')">
-          <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.remark" type="textarea" placeholder="输入备注" />
+          <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.remark" type="textarea" placeholder="Please input"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -78,47 +88,32 @@
         <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="添加员工" :visible.sync="dialogCreateStuffVisible" class="create">
-      <el-form ref="dataStuffForm" :rules="stuffrules" :model="stuffTemp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="员工姓名" prop="stuffname">
-          <el-input type="text" v-model="stuffTemp.stuffname" placeholder="请输入员工姓名" />
-        </el-form-item>
-        <!-- <el-form-item label="初始欠款" prop="borrow_money">
-          <el-input type="number" v-model="stuffTemp.borrow_money" />
-        </el-form-item> -->
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-        <el-button type="primary" @click="stuffCreateData">{{ $t('table.confirm') }}</el-button>
-      </div>
-    </el-dialog>
+
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel" />
-        <el-table-column prop="pv" label="Pv" />
+        <el-table-column prop="key" label="Channel"/>
+        <el-table-column prop="pv" label="Pv"/>
       </el-table>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogPvVisible = false">{{ $t('table.confirm') }}</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="详情" :visible.sync="dialogDetailVisible" class="detail">
+
+    <el-dialog title="详情" :visible.sync="dialogDetailVisible">
       <el-table :data="gridData">
         <el-table-column property="id" label="序号" width="200"></el-table-column>
         <el-table-column property="stuffname" label="姓名" width="200"></el-table-column>
         <el-table-column property="money" label="借还款"></el-table-column>
         <el-table-column property="create_time" label="日期" width="150"></el-table-column>
         <el-table-column property="remark" label="备注"></el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
       </el-table>
     </el-dialog>
+
   </div>
 </template>
+
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle, fetchDetailList, patchStuff, stuffBorrowSum, createStuff, deleteArticle,srearchStuffByname } from '@/api/article'
+import { fetchList, fetchPv, createArticle, updateArticle,fetchDetailList,patchStuff,stuffBorrowSum} from '@/api/article'
 import waves from '@/directive/waves' // 水波纹指令
 import { parseTime } from '@/utils'
 import axios from "axios";
@@ -135,43 +130,6 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
   return acc
 }, {})
 
-function dateFormat(date, type) {
-  date = date ? new Date(date) : new Date();
-  let getYear = date.getFullYear();
-  let getMonth = date.getMonth() + 1;
-  let getdate = date.getDate();
-  let getHou = date.getHours();
-  let getMin = date.getMinutes();
-
-  if (!type || type == 'date' || type == 'format' || type == 'scope' || type == 'render') {
-    getMonth = getMonth < 10 ? "0" + getMonth : getMonth;
-    getdate = getdate < 10 ? "0" + getdate : getdate;
-    getHou = getHou < 10 ? "0" + getHou : getHou;
-    getMin = getMin < 10 ? "0" + getMin : getMin;
-    date = `${getYear}.${getMonth}.${getdate}  ${getHou}:${getMin}`;
-  }
-  if (type == 'Date') {
-    getMonth = getMonth < 10 ? "0" + getMonth : getMonth;
-    getdate = getdate < 10 ? "0" + getdate : getdate;
-    getHou = getHou < 10 ? "0" + getHou : getHou;
-    getMin = getMin < 10 ? "0" + getMin : getMin;
-    date = `${getYear}.${getMonth}.${getdate}`;
-  }
-  if (type == 'date' || type == 'Date') {
-    return `${getYear}.${getMonth}.${getdate}`
-  } else if (type == 'format' || type == 'Format') {
-    return `${getYear}-${getMonth}-${getdate}`
-  } else if (type == 'scope' || type == 'Scope') {
-    return `${getYear}.01.01-${getYear}.12.31`
-  } else if (type == 'render') {
-    return `${getYear}-${getMonth}-${getdate}`
-  } else if (type == 'Renderlist') {
-    return `${getYear}-${getMonth}-${getdate}`
-  } else {
-    return date;
-  }
-
-}
 export default {
   name: 'ComplexTable',
   directives: {
@@ -195,12 +153,12 @@ export default {
       tableKey: 0,
       list: null,
       total: null,
-      listLoading: false,
+      listLoading: true,
       listQuery: {
         page: 1,
         limit: 20,
         importance: undefined,
-        name: undefined,
+        title: undefined,
         type: undefined,
         sort: '+id'
       },
@@ -219,24 +177,15 @@ export default {
         money: 0,
         remark: ''
       },
-      stuffTemp: {
-        stuffname: '',
-        borrow_money: 0,
-      },
-      copyTemp: {
+      copyTemp:{
         stuffname: '',
         stuff_id: 0,
         type: '',
         money: 0,
         remark: ''
       },
-      copyStuffTemp: {
-        stuffname: '',
-        borrow_money: 0,
-      },
       dialogFormVisible: false,
-      dialogDetailVisible: false,
-      dialogCreateStuffVisible: false,
+      dialogDetailVisible:false,
       dialogStatus: '',
       textMap: {
         update: '还款',
@@ -249,13 +198,8 @@ export default {
         // timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
         money: [{ required: true, message: 'money is required', trigger: 'blur' }]
       },
-      stuffrules: {
-        stuffname: [{ required: true, message: 'name is required', trigger: 'blur' }],
-        borrowMoney: [{ required: true, message: 'money is required', trigger: 'blur' }]
-      },
       downloadLoading: false,
-      gridData: [], // 员工借还详情
-      currentStuff: {} // 当前员工obj
+      gridData:[] // 员工借还详情
     }
   },
   created() {
@@ -282,7 +226,7 @@ export default {
   },
   methods: {
     getList() {
-      // this.listLoading = true
+      this.listLoading = true
       fetchList(this.listQuery).then(response => {
         console.log(response.data.data)
         this.list = response.data.data
@@ -290,15 +234,13 @@ export default {
 
         // Just to simulate the time of the request
         setTimeout(() => {
-          // this.listLoading = false
+          this.listLoading = false
         }, 1.5 * 1000)
       })
     },
     handleFilter() {
-      srearchStuffByname(this.listQuery.stuffname).then((res)=>{
-        this.list = res.data.data;
-        console.log(this.list,'success')
-      })
+      this.listQuery.page = 1
+      this.getList()
     },
     handleSizeChange(val) {
       this.listQuery.limit = val
@@ -324,12 +266,6 @@ export default {
         remark: ''
       }
     },
-    resetStuffTemp() {
-      this.stuffTemp = {
-        stuffname: '',
-        borrow_money: 0
-      }
-    },
     handleCreate(row) {
       this.resetTemp();
       this.copyTemp = Object.assign({}, row) // copy obj
@@ -345,10 +281,25 @@ export default {
           this.temp.stuff_id = this.copyTemp.id // mock a id
           this.temp.stuffname = this.copyTemp.stuffname // mock a id
           this.temp.type = 'borrow'
-          // this.temp.remark = this.copyTemp.remark
+          this.temp.remark = this.copyTemp.remark
           createArticle(this.temp).then(() => {
-            // 当前员工借款求和
-            this.getStuffBorrowSum(this.temp.stuff_id);
+            // 当前员工求和
+            stuffBorrowSum(this.temp.stuff_id).then((res)=>{
+                console.log(res.data.data,'stuffBorrowSum')
+                  var params1 = new URLSearchParams();
+                  var borrowMoney = parseFloat(res.data.data);
+                  // params1.append('borrow_money', res.data.data);
+                  params1.append('borrow_money', borrowMoney);
+                  console.log(borrowMoney,'borrowMoney')
+                  // this.patchStuff(this.temp.stuff_id,params)
+                    axios({
+                      method:'patch',
+                      url:'http://localhost/father/api/web/v2/stuffs/1',
+                      data:params1
+                    })
+            })
+            // this.list.unshift(this.temp)
+
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -374,12 +325,11 @@ export default {
         if (valid) {
           this.temp.stuff_id = this.copyTemp.id // mock a id
           this.temp.stuffname = this.copyTemp.stuffname // mock a id
-          this.temp.type = 'back'
+          this.temp.type = 'borrow'
           this.temp.remark = this.copyTemp.remark
-          this.temp.money = this.temp.money === 0 ? 0 : -Math.abs(this.temp.money)
+          this.temp.money = this.temp.money===0?0:-Math.abs(this.temp.money)
           createArticle(this.temp).then(() => {
-            // 当前员工借款求和
-            this.getStuffBorrowSum(this.temp.stuff_id);
+            // this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -391,70 +341,36 @@ export default {
         }
       })
     },
-    handleStuffCreate() {
-      this.resetStuffTemp();
-      this.dialogCreateStuffVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataStuffForm'].clearValidate()
-      })
-    },
-    stuffCreateData() {
-      this.$refs['dataStuffForm'].validate((valid) => {
-        if (valid) {
-          console.log(this.stuffTemp);
-          createStuff(this.stuffTemp).then(() => {
-            this.getList(); // 刷新stuff列表
-            this.dialogCreateStuffVisible = false
+    handleDetail(row){
+      console.log(row)
+      this.dialogDetailVisible = true
+      fetchDetailList(row.id).then((res) => {
+            this.gridData = res.data.data
+            // this.dialogDetailVisible = false
             this.$notify({
               title: '成功',
-              message: '添加员工',
+              message: '获取详情',
               type: 'success',
               duration: 2000
             })
           })
-        }
-      })
     },
-    handleDetail(row) {
-      this.currentStuff = row;
-      this.dialogDetailVisible = true
-      fetchDetailList(row.id).then((res) => {
-        this.gridData = res.data.data
-      })
-    },
-    patchStuff(id, borrowMoney) {
-      patchStuff(id, borrowMoney).then((res) => {
-        this.getList(); //刷新stuff列表
+    patchStuff(id,borrowMoney) {
+      debugger
+      console.log(id,borrowMoney)
+      patchStuff(id,borrowMoney).then((res)=>{
+        console.log('patchStuffSucess')
       })
     },
     handleDelete(row) {
-      // 删除借还详情
-      deleteArticle(row.id).then((res) => {
-        console.log(res, 'successhandle-DELETE')
-        // 刷新当前员工详情
-        this.handleDetail(this.currentStuff);
-        // 当前员工借款求和
-        this.getStuffBorrowSum(this.currentStuff.id);
-      })
       this.$notify({
         title: '成功',
         message: '删除成功',
         type: 'success',
         duration: 2000
       })
-      // const index = this.list.indexOf(row)
-      // this.list.splice(index, 1)
-    },
-    getStuffBorrowSum(stuff_id) {
-      stuffBorrowSum(stuff_id).then((res) => {
-        var params = new URLSearchParams();
-        var borrowMoney = res.data.data?res.data.data:0;
-        var currentTime = dateFormat('');
-        params.append('borrow_money', borrowMoney);
-        params.append('create_time', currentTime);
-        // 更新当前员工欠款情况
-        this.patchStuff(stuff_id, params)
-      })
+      const index = this.list.indexOf(row)
+      this.list.splice(index, 1)
     },
     handleFetchPv(pv) {
       fetchPv(pv).then(response => {
@@ -465,8 +381,8 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['序号', '员工姓名', '欠款', '更新时间']
-        const filterVal = ['id', 'stuffname', 'borrow_money', 'create_time']
+        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
+        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,
@@ -487,25 +403,4 @@ export default {
     }
   }
 }
-
 </script>
-<style>
-.detail .el-dialog {
-  width: 90%!important;
-  margin-top: 5vh !important;
-}
-
-.create .el-dialog {
-    width: 90%!important;
-}
-
-.create .el-form {
-  width: 80%!important;
-}
-
-.detail .el-dialog__body {
-  max-height: 80vh;
-  overflow: auto;
-}
-
-</style>

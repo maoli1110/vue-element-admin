@@ -9,6 +9,7 @@
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
+import { InsertBatchSql } from '@/api/article'
 
 export default {
   name: 'UploadExcel',
@@ -36,6 +37,10 @@ export default {
     handleSuccess({ results, header }) {
       this.tableData = results
       this.tableHeader = header
+      console.log(JSON.stringify(this.tableData),'tableData')
+      InsertBatchSql(this.tableData).then(res=>{
+        console.log(res,'InsertBatchSql')
+      })
     }
   }
 }

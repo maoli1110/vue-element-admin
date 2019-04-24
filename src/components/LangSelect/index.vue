@@ -14,11 +14,17 @@
 export default {
   computed: {
     language() {
+      console.log(this.$store.getters.language,'this.$store.getters.language')
       return this.$store.getters.language
     }
   },
+  created() {
+      this.$i18n.locale = 'zh'
+      this.$store.dispatch('setLanguage', 'zh')
+  },
   methods: {
     handleSetLanguage(lang) {
+      console.log(lang)
       this.$i18n.locale = lang
       this.$store.dispatch('setLanguage', lang)
       this.$message({

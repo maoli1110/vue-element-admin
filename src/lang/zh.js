@@ -109,7 +109,6 @@ export default {
     title: '标题',
     importance: '重要性',
     type: '类型',
-    remark: '点评',
     search: '搜索',
     add: '添加',
     export: '导出',
@@ -125,7 +124,14 @@ export default {
     draft: '草稿',
     delete: '删除',
     cancel: '取 消',
-    confirm: '确 定'
+    confirm: '确 定',
+    borrow: '借',
+    back: '还',
+    detail: '详情',
+    stuffname: '员工姓名',
+    borrowtitle: '欠款',
+    updatetime: '更新时间',
+    remark: '备注'
   },
   errorLog: {
     tips: '请点击右上角bug小图标',

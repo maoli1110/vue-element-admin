@@ -15,28 +15,34 @@
     <el-table v-loading="listLoading" :data="list" element-loading-text="拼命加载中" border fit highlight-current-row>
       <el-table-column align="center" label="Id" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="员工姓名">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.stuffname }}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="欠款" width="115" align="center">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.author }}</el-tag>
+          {{ scope.row.borrow_money }}
         </template>
       </el-table-column>
-      <el-table-column label="Readings" width="115" align="center">
+      <el-table-column label="操作" width="115" align="center">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          <button>借</button>
+          <button>还</button>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Date" width="220">
+      <el-table-column label="借还详情" width="115" align="center">
+        <template slot-scope="scope">
+         <button>详情</button>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="时间" width="220">
         <template slot-scope="scope">
           <i class="el-icon-time"/>
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.create_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -72,17 +78,19 @@ export default {
     fetchData() {
       this.listLoading = true
       fetchList().then(response => {
-        this.list = response.data.items
+        console.log(response,'response.data.data')
+        this.list = response.data.data
         this.listLoading = false
       })
     },
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
-        const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+        const tHeader = ['stuffname', 'borrow_money', 'create_time']
+        const filterVal = ['stuffname', 'borrow_money', 'create_time']
         const list = this.list
         const data = this.formatJson(filterVal, list)
+        console.log(data,'data')
         excel.export_json_to_excel({
           header: tHeader,
           data,

@@ -2,17 +2,32 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/article/list',
+    url: '/v2/stuffs',
     method: 'get',
     params: query
   })
 }
 
-export function fetchArticle(id) {
+export function patchStuff(id,data) {
   return request({
-    url: '/article/detail',
-    method: 'get',
-    params: { id }
+    url: '/v2/stuffs/'+id,
+    method: 'patch',
+    data
+  })
+}
+
+export function fetchDetailList(id) {
+  return request({
+    url: '/v2/articles/search?id='+id,
+    method: 'get'
+  })
+}
+
+
+export function stuffBorrowSum(id) {
+  return request({
+    url: '/v2/articles/sum?id='+id,
+    method: 'get'
   })
 }
 
@@ -26,15 +41,46 @@ export function fetchPv(pv) {
 
 export function createArticle(data) {
   return request({
-    url: '/article/create',
+    url: '/v2/articles',
     method: 'post',
     data
   })
 }
 
+export function deleteArticle(id) {
+  return request({
+    url: '/v2/articles/'+id,
+    method: 'delete'
+  })
+}
+
 export function updateArticle(data) {
   return request({
-    url: '/article/update',
+    url: '/v2/article/update',
+    method: 'post',
+    data
+  })
+}
+
+export function createStuff(data) {
+  return request({
+    url: '/v2/stuffs',
+    method: 'post',
+    data
+  })
+}
+
+export function srearchStuffByname(id) {
+  return request({
+    url: '/v2/stuffs/search?id='+id,
+    method: 'get'
+  })
+}
+
+
+export function InsertBatchSql(data) {
+  return request({
+    url: '/v2/articles/batch',
     method: 'post',
     data
   })
