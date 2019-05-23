@@ -9,7 +9,7 @@
 
 <script>
 import UploadExcelComponent from '@/components/UploadExcel/index.vue'
-import { InsertBatchSql } from '@/api/article'
+import { InsertArticleBatchSql,InsertStuffBatchSql } from '@/api/article'
 
 export default {
   name: 'UploadExcel',
@@ -37,9 +37,28 @@ export default {
     handleSuccess({ results, header }) {
       this.tableData = results
       this.tableHeader = header
-      console.log(JSON.stringify(this.tableData),'tableData')
-      InsertBatchSql(this.tableData).then(res=>{
-        console.log(res,'InsertBatchSql')
+      console.log(this.tableData,'tableData')
+      // console.log(JSON.stringify(this.tableData),'tableData')
+      var tableAticleResult =[];
+      var tableStuffResult = [];
+      this.tableData.forEach((value ,key)=>{
+        tableAticleResult[key]=[];
+        tableAticleResult[key].push(value.stuff_id)
+        tableAticleResult[key].push(value.stuffname)
+        tableAticleResult[key].push(value.type)
+        tableAticleResult[key].push(value.money)
+        tableAticleResult[key].push(value.remark)
+      })
+      this.tableData.forEach((value ,key)=>{
+        tableStuffResult[key]=[];
+        tableStuffResult[key].push(value.stuffname)
+        tableStuffResult[key].push(value.money)
+      })
+      InsertArticleBatchSql(tableAticleResult).then(res=>{
+        console.log(res,'InsertArticleBatchSql')
+      })
+      InsertStuffBatchSql(tableStuffResult).then(res=>{
+        console.log(res,'InsertStuffBatchSql')
       })
     }
   }

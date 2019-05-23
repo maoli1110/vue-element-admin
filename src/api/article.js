@@ -78,9 +78,17 @@ export function srearchStuffByname(id) {
 }
 
 
-export function InsertBatchSql(data) {
+export function InsertArticleBatchSql(data) {
   return request({
     url: '/v2/articles/batch',
+    method: 'post',
+    data
+  })
+}
+
+export function InsertStuffBatchSql(data) {
+  return request({
+    url: '/v2/stuffs/batch',
     method: 'post',
     data
   })

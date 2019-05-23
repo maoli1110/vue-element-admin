@@ -40,7 +40,7 @@ export default {
     dynamicTable: '动态Table',
     dragTable: '拖拽Table',
     inlineEditTable: 'Table内编辑',
-    complexTable: '综合Table',
+    complexTable: '借款明细',
     treeTable: '树形表格',
     customTreeTable: '自定义树表',
     tab: 'Tab',

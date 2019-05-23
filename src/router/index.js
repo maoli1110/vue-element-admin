@@ -248,7 +248,7 @@ export const asyncRouterMap = [
   {
     path: '/excel',
     component: Layout,
-    redirect: '/excel/export-excel',
+    redirect: '/excel/upload-excel',
     name: 'Excel',
     meta: {
       title: 'excel',
@@ -256,23 +256,24 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: 'export-excel',
-        component: () => import('@/views/excel/exportExcel'),
-        name: 'ExportExcel',
-        meta: { title: 'exportExcel' }
-      },
-      {
-        path: 'export-selected-excel',
-        component: () => import('@/views/excel/selectExcel'),
-        name: 'SelectExcel',
-        meta: { title: 'selectExcel' }
-      },
-      {
         path: 'upload-excel',
         component: () => import('@/views/excel/uploadExcel'),
-        name: 'UploadExcel',
-        meta: { title: 'uploadExcel' }
-      }
+        name: '初始化借款',
+        meta: { title: '初始化借款' }
+      },
+      // {
+      //   path: 'export-excel',
+      //   component: () => import('@/views/excel/exportExcel'),
+      //   name: 'ExportExcel',
+      //   meta: { title: 'exportExcel' }
+      // },
+      // {
+      //   path: 'export-selected-excel',
+      //   component: () => import('@/views/excel/selectExcel'),
+      //   name: 'SelectExcel',
+      //   meta: { title: 'selectExcel' }
+      // }
+      
     ]
   },
 
